@@ -1,0 +1,217 @@
+{% extends 'finlab/elements/layouts/admin.html' %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %} {{ page_title }} {% endblock %}
+
+{% block additional_css %}
+    <link href="{% static 'credit/css/ag-grid-custom.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'finlab/vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+
+{% block message %}
+{% include 'finlab/elements/alert.html' %}
+{% endblock %}
+
+
+
+{% block content %}
+    <!-- row -->
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Information Générale</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="mb-3 col-md-6 col-sm-12">
+                           <div>Introduite le: <h6 style="display: inline-block" class="mx-2"><strong>{{ credit.date_introduction }}</strong></h6></div>
+                           <div>Statut: <h6 style="display: inline-block" class="mx-2"><span class="badge badge-pill badge-dark"><strong>{{ credit.statut }}</strong></span> </h6></div>
+                            <div>Agence domiciliaire: <p style="display: inline-block" class="mx-2"><strong>{{ credit.chg_initiateur.agence.agency_name }}</strong></p></div>
+                            <div>Agence mandataire: <p style="display: inline-block" class="mx-2"><strong>{{ credit.chg_initiateur.agence.agency_name }}</strong></p></div>
+                        </div>
+
+                        <div class="mb-3 col-md-6 col-sm-12">
+                            <div>Racine: <h6 style="display: inline-block" class="mx-2"><strong>{{ credit.emprunteur.racine }}</strong></h6></div>
+                            <div>Raison sociale: <p style="display: inline-block" class="mx-2"><strong>{{ credit.emprunteur.nom }}</strong> </p></div>
+                            <div>Chargé d'affaire: <p style="display: inline-block" class="mx-2"><strong>{{ credit.chg_initiateur.gestionnaire }}</strong></p></div>
+                            <div>Chef de d'agence: <p style="display: inline-block" class="mx-2"><strong>{{ credit.chg_initiateur.agence.agency_manager }}</strong></p></div>
+                            <div>Chef de zone: <p style="display: inline-block" class="mx-2"><strong>{{ credit.chg_initiateur.agence.zone.zone_chief }}</strong></p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Ligne de crédit</h4>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <button class="btn btn-primary" onclick="onBtnExport()">
+                            <span class="btn-icon-start text-warning">
+                                <i class="fa fa-download color-warning"></i>
+                            </span>Télécharger
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-lg-4 col-sm-5 ms-auto">
+						<table class="table table-clear">
+							<tbody>
+								<tr>
+									<td class="left"><strong>Total:</strong></td>
+									<td class="right" style="font-size: 18px"><strong id="somme-credit">{{ credit.somme_total_credit|intcomma }} FCFA</strong><br>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+                    <div class="table-responsive">
+                        <div id="grid-credit" style="height: 300px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Observation</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Nav tabs -->
+                    <div class="default-tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#home"><i class="la la-home me-2"></i> Chargé d'affaire</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#profile"><i class="la la-user me-2"></i> Chef d'agence</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#contact"><i class="la la-phone me-2"></i> Chef de zone</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel">
+                                {% for decision_ges in decisions_gestionnaire %}
+                                <div class="accordion accordion-header-bg accordion-bordered mt-4" id="accordion-seven">
+                                    <div class="accordion-item">
+                                        <div class="accordion-header  rounded-lg" id="accord-7One" data-bs-toggle="collapse" data-bs-target="#collapse7One" aria-controls="collapse7One"   aria-expanded="true"  role="button">
+                                            <span class="accordion-header-icon"></span>
+                                            <span class="accordion-header-text">{{ decision_ges.decision }} le {{ decision_ges.date_decision }}</span>
+                                            <span class="accordion-header-indicator"></span>
+                                        </div>
+                                        <div id="collapse7One" class="collapse accordion__body show" aria-labelledby="accord-7One" data-bs-parent="#accordion-seven">
+                                            <div class="accordion-body-text">
+                                                {{ decision_ges.commentaire }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="tab-pane fade" id="profile">
+                                <div class="pt-4">
+                                    <h4>This is profile title</h4>
+                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
+                                    </p>
+                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contact">
+                                <div class="pt-4">
+                                    <h4>This is contact title</h4>
+                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
+                                    </p>
+                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="message">
+                                <div class="pt-4">
+                                    <h4>This is message title</h4>
+                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
+                                    </p>
+                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="bootstrap-modal">
+                <!-- Large modal -->
+                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" id="modal-edit-ligne-credit">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Modifier le crédit</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                </button>
+                            </div>
+                            <div id="line-container" class="row p-md-3">
+
+                                <div class="col-6 col-sm-6 mb-2">
+                                <div class="mb-3">
+                                    <input class="form-control" id="ligne-credit-id" type="number" name="id" value="2" style="display: none;">
+                                    <label class="text-label form-label">Type de crédit *</label>
+                                    <select class="form-control default-select wide" id="type-credit" name="type_credit" required>
+                                        {% for choice in choices %}
+                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                        {% endfor %}
+
+{#                                            {% for choice in choices %}#}
+{#                                              {% if choice.0 == params.data.type_credit %}#}
+{#                                                <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>#}
+{#                                              {% else %}#}
+{#                                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>#}
+{#                                              {% endif %}#}
+{#                                            {% endfor %}#}
+                                    </select>
+                                </div>
+                            </div>
+                                <div class="col-6 col-sm-6 mb-2">
+                                    <div class="mb-3">
+                                        <label class="text-label form-label">Montant *</label>
+                                        <input class="form-control" id="montant" type="number" name="montant" placeholder="Saisissez le montant" required>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="mb-3">
+                                        <textarea id="commentaire" name="comment" class="textarea_editor form-control bg-transparent" rows="5" placeholder="Entrez votre commentaire ..."></textarea>
+                                    </div>
+                                </div>
+                                <hr>
+
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Annuler</button>
+                            <button type="button" id="patch-button" class="btn btn-primary">Sauvegarder</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block additional_js %}
+
+{#<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>#}
+<script src="{% static 'finlab/vendor/ag-grid-community/dist/ag-grid-community.min.js' %}"></script>
+<script src="{% static 'finlab/vendor/sweetalert2/dist/sweetalert2.min.js' %}"></script>
+<script src="{% static 'credit/js/credit-edit.js' %}"></script>
+{% endblock %}
