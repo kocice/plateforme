@@ -1,0 +1,152 @@
+<link rel="stylesheet" sizes="76x76" href="/static/css/style_grid.css">
+<script src="/static/js/utils-grid.js"></script>
+
+<script>
+  // Tableau recapitulatif des abonnés par produit
+  var initialData = JSON.parse("{{data|escapejs}}");
+
+  var columnDefsData = [
+        {field: "produits", width: 120, pinned: 'left'},
+        {field: "abonné", width: 100, type: 'numericColumn'},
+        {headerName: "Taux", field: "equipement", width: 100, type: 'numericColumn'},
+        {headerName: "Abonnés E", field: "abonné_encours", width: 120, type: 'numericColumn'},
+        {headerName: "Taux E", field: "equipement_encours", width: 100, type: 'numericColumn'},
+        {headerName: "TC M-1", field: "tc_m1", width: 120, type: 'numericColumn', cellClassRules: cellClassRules},
+        {headerName: "TC N-1", field: "tc_n1", width: 120, type: 'numericColumn', cellClassRules: cellClassRules},
+  ];
+
+  var gridOptionsData = {
+    defaultColDef: {
+        resizable: true,
+        editable: false,
+        sortable: true
+    },
+    rowHeight: 20,
+    getRowStyle: params => {
+      if (params.node.rowIndex % 2 === 0) {
+          return { background: '#eee' };
+      }
+    },
+
+    columnDefs: columnDefsData,
+    rowData: initialData
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var gridDiv = document.querySelector('#data');
+    new agGrid.Grid(gridDiv, gridOptionsData);
+  });
+  // Fin du Tableau
+
+
+  // Taux de croissance
+  var initialDataEquip = JSON.parse("{{prod_equipement|escapejs}}");
+  function getTotal(datum) {
+      return (
+        datum.DPME +
+        datum.DGEI +
+        datum.DMS +
+        datum.DBPPT
+      );
+    }
+    
+    const options = {
+      container: document.getElementById('croissance'),
+      autoSize: true,
+      //data: initialDataEquip,
+      data: initialDataEquip.sort(function (a, b) {
+        return getTotal(b) - getTotal(a);
+      }),
+      theme: {
+        palette: {
+          fills: ['#E89C45', '#E67900', '#491E06', '#80a0c3'],
+          strokes: ['#E89C45', '#c16068', '#a2bf8a', '#80a0c3'],
+        },
+
+        overrides: {
+          bar: {
+            series: {
+              strokeWidth: 0,
+              highlightStyle: {
+                
+                //series: {
+                //  strokeWidth: 0,
+                //  dimOpacity: 0.7,
+                //  highlightStyle: {
+                //    item : {
+                //      fill: '#eee',
+                //    }
+                //  },
+                //},
+
+              },
+            },
+          },
+        },
+      },
+      series: [
+        {
+          type: 'bar',
+          xKey: 'produit',
+          yKey: 'DPME',
+          yName: 'DPME',
+          stacked: true,
+        },
+        {
+          type: 'bar',
+          xKey: 'produit',
+          yKey: 'DGEI',
+          yName: 'DGEI',
+          stacked: true,
+        },
+        {
+          type: 'bar',
+          xKey: 'produit',
+          yKey: 'DMS',
+          yName: 'DMS',
+          stacked: true,
+        },
+      ],
+      axes: [
+        {
+          type: 'category',
+          position: 'left',
+        },
+        {
+          type: 'number',
+          position: 'top',
+          label: {
+            formatter: (params) => {
+              return ((params.value / 300) * 100).toFixed(0) + '%';
+            },
+          },
+        },
+      ],
+      legend: {
+        position: 'bottom',
+      },
+  };
+  var chart = agCharts.AgChart.create(options);
+  // Fin Taux de croissance
+
+
+  // Evolution des abonnés par mois
+  var initialEvoProduit = JSON.parse("{{evo_produit|escapejs}}");
+  initialEvoProduit.forEach(function(data) { data.Date = new Date(data.Date); });
+  //semaineInfo.Date = new Date(semaineInfo.Date)
+  //console.log(initialEvoProduit)
+
+  // Evolution des abonnés par mois
+  const optionsEvoProd = {
+    container: document.getElementById('idEvoProd'),
+    autoSize: true,
+    data: initialEvoProduit,
+    theme: getEvoProdTheme(),
+    series: getEvoProdSeries(),
+    axes: getEvoProdAxes(),
+    legend: getEvoProdLegend(),
+  };
+  var chartEvoProd = agCharts.AgChart.create(optionsEvoProd);
+  // Fin "Evolution des abonnés par mois"
+
+</script>

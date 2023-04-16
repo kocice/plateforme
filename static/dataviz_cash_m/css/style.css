@@ -1,0 +1,92 @@
+:root {
+    --baci-orange-fonce: #491E06;
+    --baci-orange: #E67900;
+    --baci-gris: #46484D;
+    --baci-blanc: #FFFFFF;
+    --gris-claire: #bedcfcda;
+    
+    --bg: #eee;
+    --ex: #868482;
+}
+
+.test {
+    color: red;
+}
+
+.color-orange {
+    color: var(--baci-orange)
+}
+.color-orange-fonce {
+    color: var(--baci-orange-fonce)
+}
+.color-gris {
+    color: var(--baci-gris)
+}
+.color-blanc {
+    color: var(--baci-blanc)
+}
+
+.bg-orange-fonce {
+    background-color: var(--baci-orange-fonce)
+}
+.bg-orange {
+    background-color: var(--baci-orange)
+}
+.bg-gris {
+    background-color: var(--baci-gris)
+}
+.bg-blanc {
+    background-color: var(--baci-blanc)
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.body-custom {
+    background-color: #eee;
+}
+
+/* ================================== Navbar style =============================== */
+.nav-bar {
+    background-color: var(--baci-blanc);
+    box-shadow: 0 2px 5px #777;
+}
+
+#connexion {
+    outline: none;
+    text-decoration: none;
+    padding: 2px 1px 0;
+}
+
+#connexion:link {
+    color: var(--baci-gris);
+}
+
+#connexion:visited {
+    color: var(--baci-gris);
+}
+
+#connexion:focus {
+    color: var(--baci-gris);
+}
+  
+#connexion:hover {
+    color: var(--baci-orange);
+}
+  
+#connexion:active {
+    color: var(--baci-orange-fonce);
+}
+
+/* ================================== End Navbar style =============================== */
+
+/* ================================== Main style =============================== */
+.main-custom {
+    width: 98%;
+    margin: auto;
+    margin-top: 30px;
+}
+
+/* ================================== End Main style =============================== */

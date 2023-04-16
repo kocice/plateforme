@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'finlab',
     'users',
     'agency_manager',
-    'credit'
+    'credit',
+    'dataviz_cash_m'
 ]
 
 MIDDLEWARE = [

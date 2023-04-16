@@ -30,6 +30,7 @@ urlpatterns = [
 
     path('credit/', include('credit.urls', namespace='credit')),
 
+    path('dashboard-dms/', include('dataviz_cash_m.urls', namespace='dms')),
 
     path('reset_password/', auth_views.PasswordResetView.as_view(form_class=EmailValidationOnForgotPassword),
          name='reset_password'),

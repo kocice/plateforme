@@ -1,0 +1,41 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Connexion {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" sizes="76x76" href="/static/css/auth.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="wrapper" style="height: 80vh">
+        <div class="connexion-container">
+            <div class="form-header">
+                <h3>Connexion</h3>
+            </div>
+            <div class="form-body">
+
+                {% if error %}
+                    <p style="color: #808080; border: 1px solid red; padding: 10px">{{ error }}</p>
+                {% endif %}
+
+                <form method="POST" action={% url 'auth:login' %}>
+                    {% csrf_token %}
+                    <label style="display: block;" for="emai">Adresse e-mail :</label>
+                    <input type="email" required id="emai" name="email"><br><br>
+                    <label style="display: block;" for="password">Mot de passe :</label>
+                    <input type="password" required id="password" name="password"><br><br>
+                    <input type="submit" value="Connexion">
+                </form>
+
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+{% endblock javascripts %}

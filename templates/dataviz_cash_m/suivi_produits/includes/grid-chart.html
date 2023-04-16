@@ -1,0 +1,217 @@
+<script>
+  //===================== Portefeuille =====================
+  var portefeuilleData = JSON.parse("{{portefeuille|escapejs}}");
+  const optionsPortefeuille = {
+    container: document.getElementById('portefeuille'),
+    data: portefeuilleData,
+    autoSize: true,
+    series: [
+      {
+        type: 'pie',
+        angleKey: 'portefeuille',
+        innerRadiusOffset: -40,
+        labelKey: 'directions',
+        label: {
+          color: '#46484D',
+          offset: 0,
+        },
+        sectorLabelKey: 'portefeuille',
+        sectorLabel: {
+          color: 'white',
+          fontSize: 10,
+          fontWeight: 'bold',
+        },
+        callout: {
+          strokeWidth: 0,
+        },
+        fills: ['#80a0c3', '#E89C45', '#E67900', '#491E06'],
+        strokes: ['#80a0c3', '#E89C45', '#E67900', '#491E06'],
+        strokeOpacity: 0.7,
+        highlightStyle: {
+          item : {
+            fill: '#e0ab6eb7',
+            strokeOpacity: 0.1,
+          }
+        }
+      },
+    ],
+    legend: {
+      enabled: false,
+    },
+  };
+  var chart = agCharts.AgChart.create(optionsPortefeuille);
+  //===================== End Portefeuille =====================
+
+
+  //===================== Resumé =====================
+  var initialResume = JSON.parse("{{resum_graph|escapejs}}");
+  const optionsResume = {
+    container: document.getElementById('resumeChart'),
+    autoSize: true,
+    data: initialResume,
+    theme: getResumeTheme(),
+    series: getResumeSeries(),
+    axes: getResumeAxes(),
+    legend: getResumeLegend(),
+  };
+  var chartResume = agCharts.AgChart.create(optionsResume);
+  //===================== End resumé=====================
+  
+  
+  //===================== Taux de croissance =====================
+  var initialDataEquip = JSON.parse("{{prod_equipement|escapejs}}");
+  function getTotal(datum) {
+    return (
+      datum.DPME +
+      datum.DGEI +
+      datum.DMS +
+      datum.DBPPT
+    );
+  }
+    
+  const options = {
+    container: document.getElementById('croissance'),
+    autoSize: true,
+    data: initialDataEquip.sort(function (a, b) {
+        return getTotal(b) - getTotal(a);
+    }),
+    theme: {
+      palette: {
+        fills: ['#E89C45', '#E67900', '#491E06', '#80a0c3'],
+        strokes: ['#E89C45', '#c16068', '#a2bf8a', '#80a0c3'],
+      },
+  
+      overrides: {
+        bar: {
+          series: {
+            strokeWidth: 0,
+            highlightStyle: {
+              
+              //series: {
+              //  strokeWidth: 0,
+              //  dimOpacity: 0.7,
+              //  highlightStyle: {
+              //    item : {
+              //      fill: '#eee',
+              //    }
+              //  },
+              //},
+  
+            },
+          },
+        },
+      },
+    },
+    series: [
+      {
+        type: 'bar',
+        xKey: 'produit',
+        yKey: 'DPME',
+        yName: 'DPME',
+        stacked: true,
+      },
+      {
+        type: 'bar',
+        xKey: 'produit',
+        yKey: 'DGEI',
+        yName: 'DGEI',
+        stacked: true,
+      },
+      {
+        type: 'bar',
+        xKey: 'produit',
+        yKey: 'DMS',
+        yName: 'DMS',
+        stacked: true,
+      },
+    ],
+    axes: [
+      {
+        type: 'category',
+        position: 'left',
+      },
+      {
+        type: 'number',
+        position: 'top',
+        label: {
+          formatter: (params) => {
+            return ((params.value / 300) * 100).toFixed(0) + '%';
+          },
+        },
+      },
+    ],
+    legend: {
+      position: 'top',
+    },
+  };
+  var chart = agCharts.AgChart.create(options);
+  //===================== Fin Taux de croissance =====================
+  
+  
+   //===================== Evolution des abonnés par mois =====================
+   var initialEvoProduit = JSON.parse("{{evo_produit|escapejs}}");
+   initialEvoProduit.forEach(function(data) { data.Date = new Date(data.Date); });
+   const optionsEvoProd = {
+     container: document.getElementById('idEvoProd'),
+     autoSize: true,
+     data: initialEvoProduit,
+     theme: getEvoProdTheme(),
+     series: getEvoProdSeries(),
+     axes: getEvoProdAxes(),
+     legend: getEvoProdLegend(),
+   };
+   var chartEvoProd = agCharts.AgChart.create(optionsEvoProd);
+   //===================== Fin "Evolution des abonnés par mois" =====================
+   
+   
+  //===================== KPI =====================
+  var kpi = JSON.parse("{{info_prod|escapejs}}");
+  kpiData = [
+    {
+      name: 'Equipés',
+      taux: kpi[0].Equipement,
+    },
+    {
+      name: 'Non Equipés',
+      taux: 100 - kpi[0].Equipement,
+    },
+  ];
+
+  const percentage = (value) => `${value}%`;
+  const optionsKPI = {
+    container: document.getElementById('kpi'),
+    data: kpiData,
+    series: [
+      {
+        type: 'pie',
+        angleKey: 'taux',
+        fills: ['#E67900', '#dff3ea'],
+        strokeWidth: 0,
+        strokeOpacity: 0.7,
+        highlightStyle: {
+          item : {
+            fill: '#d69f60'
+          },
+        },
+        innerRadiusOffset: -20,
+        innerLabels: [
+          {
+            text: percentage(kpiData[0].taux),
+            color: '#E67900',
+            fontSize: 25,
+          },
+          {
+            text: 'Equipés',
+            fontSize: 18,
+            margin: 4,
+          },
+        ],
+        innerCircle: {
+          fill: '#dff3ea',
+        },
+      },
+    ],
+  };
+  var kpiChart = agCharts.AgChart.create(optionsKPI);
+  //===================== End KPI =====================
+</script>

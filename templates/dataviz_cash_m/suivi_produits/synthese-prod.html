@@ -1,0 +1,75 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} SYNTHESE {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" sizes="76x76" href="/static/css/suivi_produit.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="wrapper">
+        {% include "suivi_produits/includes/side-bar.html" %}
+        <div class="main-home">
+            <div class="row">
+                <div class="col-md-7">
+                    <div>
+                        <!-- Evolution des abonnés par mois -->
+                        <div class="graph-cart">
+                            <div class="graph-title">
+                                <h6>Evolution des abonnés par mois</h6>
+                            </div>
+                            <div class="graphique" id="idEvoProd" style="height: 100%">
+                            </div>
+                        </div>
+                        <!-- Fin Evolution des abonnés par mois -->
+                    </div>
+
+                    <!-- Tableau du resume des produits -->
+                    <div class="grid-container" style="height: 300px; margin-top: 20px">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>Titre</h5>
+                                <p>Phrase d'accroche</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="choice-date">
+                                    <input id="periode" type="date" id="start" name="trip-start"
+                                        value=""
+                                        min="2022-01-01" max="">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="data" style="height: 80%" class="ag-theme-material">
+                        </div>
+                    </div>
+                    <!-- Fin Datbleau du resume des produits -->
+                </div>
+
+                <div class="col-md-5">:
+                    <!-- Comparatif du taux d'equipement des produits -->
+                    <div id="container-actuel" class="graph-cart">
+                        <div class="graph-title">
+                            <h6>Taux d'equipement par produits</h6>
+                        </div>
+                        <div class="graphique" id="croissance" style="height: 95%">
+                        </div>
+                    </div>
+                    <!-- Fin Comparatif du taux d'equipement des produits -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+{% include "suivi_produits/includes/script.html" %}
+{% include "suivi_produits/includes/synthese-grid.html" %}
+<script src="/static/js/synthese-prod.js"></script>
+
+{% endblock javascripts %}

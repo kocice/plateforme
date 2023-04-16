@@ -1,0 +1,27 @@
+<div class="sidebar">
+    {% comment %} <div id="choice-produit">
+        <select id="produit" name="produit" class="choice-selector">
+            <option value="anet">ANET</option>
+            <option value="tpe">TPE</option>
+            <option value="ecnps">E-CNPS</option>
+            <option value="efacture">E-Facture</option>
+            <option value="acs">ACS</option>
+            <option value="ramassage">Ramassage</option>
+      </select>
+    </div>
+    <div class="col-md-4 mt-3">
+        <div class="choice-date">
+            <form method="POST" action={% url 'dms:edit-date' %}>
+                <input id="idEditDate" type="date" id="start" name="trip-start"
+                    value="2022-10-18"
+                    min="2022-01-01" max="2022-12-31">
+            </form>
+        </div>
+    </div> {% endcomment %}
+    <hr style="background-color: #fff">
+    
+    <div class="pages">
+        <h5>pages</h5>
+        <a href={% url 'dms:home' %}><i class="bi bi-bar-chart-line"></i> DMS</a>
+    </div>
+</div>
