@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 var elt = document.getElementById('produit');
 elt.addEventListener('change', function () {
   console.log('value => '+this.value);
@@ -104,8 +106,8 @@ elt.addEventListener('change', function () {
             legend: getEvoProdLegend(),
           };
           agCharts.AgChart.update(chartEvoProd, optionsEvoProd);
-  })
-})
+  });
+});
 
 
 // Choisir une periode à comparer
@@ -125,7 +127,7 @@ eltPeriode.addEventListener('change', function () {
       .then(result => {
           let data = JSON.parse(result.data);
           gridOptionsData.api.setRowData(data);
-  })
+  });
 
 });
 // Fin
@@ -146,12 +148,12 @@ eltDate.addEventListener('change', function () {
   });
 
   // On exécute la requête
-  fetch(request)
+  fetch(request);
   //   .then(response => response.json())
   //   .then(result => {
   //         // let info_ges = JSON.parse(result.info_ges);
           
   //         // gridOptionsGest.api.setRowData(info_ges);
   // })
-})
+});
 

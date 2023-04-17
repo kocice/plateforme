@@ -31,13 +31,13 @@ def editDate(request):
     return redirect(url)
 
 
-@login_required(login_url="auth:login")
+@login_required(login_url='finlab:login')
 def index(request):
     # service = Service.objects.get(name="Cash_M")
-    service = "Cash_M"
-    user = request.user
-    if str(user.service).strip() != service:
-        raise PermissionDenied
+    # service = "Cash_M"
+    # user = request.user
+    # if str(user.service).strip() != service:
+    #     raise PermissionDenied
 
     produit = 'anet'
     dict_portefeuille = data_extractor.getPortefeuille()
@@ -48,6 +48,7 @@ def index(request):
     dict_info_prod = data_extractor.getInfoProduct(produit=produit)
 
     evo_produit = data_extractor.evoProduit(produit=produit)
+    print(evo_produit)
     data = utils.prodData()
     prod_equipement = utils.getProdEquipement()
 
@@ -63,7 +64,7 @@ def index(request):
         'data': dumps(data),
         'prod_equipement': dumps(prod_equipement),
     }
-    return render(request, "suivi_produits/home.html", context)
+    return render(request, "dataviz_cash_m/suivi_produits/home.html", context)
 
 
 @csrf_exempt
@@ -91,9 +92,9 @@ def updateData(request):
     # @login_required(login_url="auth:login")
     # def synthese(request):
     service = "Cash_M"
-    user = request.user
-    if str(user.service).strip() != service:
-        raise PermissionDenied
+    # user = request.user
+    # if str(user.service).strip() != service:
+    #     raise PermissionDenied
 
     produit = 'anet'
     evo_produit = data_extractor.evoProduit(produit=produit)
@@ -104,7 +105,7 @@ def updateData(request):
         'data': dumps(data),
         'prod_equipement': dumps(prod_equipement),
     }
-    return render(request, "suivi_produits/synthese-prod.html", context)
+    return render(request, "dataviz_cash_m/suivi_produits/synthese-prod.html", context)
 
 
 @csrf_exempt

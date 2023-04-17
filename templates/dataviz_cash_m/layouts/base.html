@@ -3,6 +3,7 @@
 * BACI Dashboard - v1.0.0
 =========================================================
 -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -10,18 +11,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
-  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
-  <link rel="stylesheet" sizes="76x76" href="/static/css/style.css">
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'dataviz_cash_m/img/logo-baci.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'dataviz_cash_m/img/logo-baci.png' %}">
+  <link rel="stylesheet" sizes="76x76" href="{% static 'dataviz_cash_m/css/style.css' %}">
 
   <title>
     BACI - {% block title %}{% endblock %} | Dashboard
   </title>
 
   {% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> {% endcomment %}
-  {% include "includes/css-link.html" %}
+  {% include "dataviz_cash_m/includes/css-link.html" %}
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+{#    <link rel="stylesheet" href="{% static 'finlab/vendor/' %}">#}
 
   <!-- CSS personnalisé de la page enfant -->
   {% block stylesheets %}{% endblock stylesheets %}
@@ -31,7 +33,7 @@
 <body class="body-custom">
 
   {% comment %} {% include "includes/sidebar.html" %} {% endcomment %}
-  {% include "includes/navbar.html" %}
+  {% include "dataviz_cash_m/includes/navbar.html" %}
 
   <main class="main-custom">
     
@@ -41,7 +43,7 @@
 
   {% comment %} {% include "includes/fixed-plugin.html" %} {% endcomment %}
 
-  {% include "includes/scripts.html" %}
+  {% include "dataviz_cash_m/includes/scripts.html" %}
 
   <!-- Specific JS goes HERE --> 
   {% block javascripts %}{% endblock javascripts %}

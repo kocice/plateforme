@@ -1,176 +1,383 @@
-{% extends 'layouts/base.html' %}
+{% extends 'finlab/elements/layouts/index-layout.html' %}
 
-{% block title %} Home {% endblock title %}
+{% load static %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}
-<link rel="stylesheet" sizes="76x76" href="/static/css/suivi_produit.css">
-{% endblock stylesheets %}
+{% block additional_css %}
+    <link rel="stylesheet" href="{% static 'finlab/vendor/wow-master/css/libs/animate.css' %}" >
+    <link rel="stylesheet" href="{% static 'finlab/vendor/bootstrap-select-country/css/bootstrap-select-country.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'finlab/vendor/datepicker/css/bootstrap-datepicker.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'finlab/vendor/swiper/css/swiper-bundle.min.css' %}" >
+
+    <link rel="stylesheet" href="{% static 'dataviz_cash_m/css/ag-grid-custom.css' %}" type="text/css" >
+
+    <!-- -- Datepicker -- -->
+    {% for cssurl in dz_array.pagelevel.finlab.finlab_views.css.form_pickers %}
+    <link rel="stylesheet" href="{% static cssurl %}" >
+    {% endfor %}
+	<!-- -- DataTables -- -->
+	{% for cssurl in dz_array.pagelevel.finlab.finlab_views.css.table_datatable_basic %}
+    <link rel="stylesheet" href="{% static cssurl %}" >
+    {% endfor %}
+
+{% endblock %}
+
+{% block message %}
+{% include 'finlab/elements/alert.html' %}
+{% endblock %}
 
 {% block content %}
-  <div class="wrapper">
 
-    {% include "suivi_produits/includes/side-bar.html" %}
-    <div class="main-home">
-    
-    <!-- Bar -->
-      <div class="banderole graph-container">
-        <div style="width: 50%;">
-          <p class="page-name"><i class="bi bi-house-door-fill"></i> / DMS / <span> Cash Management</span></p>
-          <p class="page-title">Analytique</p>
-        </div>
-        
-        <div style="width: 15%;">
-          <div class="choice-date">
-            <form method="POST" action={% url 'dms:edit-date' %}>
-                <input id="idEditDate" type="date" id="start" name="trip-start"
-                    value="2022-10-18"
-                    min="2022-01-01" max="2022-12-31">
-            </form>
-          </div>
-        </div>
-        
-        <div style="width: 15%;">
-          <div id="choice-produit">
-            <select id="produit" name="produit" class="choice-selector">
-              <option value="anet">ANET</option>
-              <option value="tpe">TPE</option>
-              <option value="ecnps">E-CNPS</option>
-              <option value="efacture">E-Facture</option>
-              <option value="acs">ACS</option>
-              <option value="ramassage">Ramassage</option>
-            </select>
-          </div>
-        </div>
-        
-      </div>
-    <!-- End Bar -->
-    
-      <div class="graph-container" style="height: 200px;">
-        <div class="graph-cart" style="width: 25%;">
-          <div class="graph-title">
-              <h6>Portefeuille</h6>
-          </div>
-          <div class="graphique" id="portefeuille" style="height: 100%">
-          </div>
-        </div>
-        
-        <div class="graph-cart" style="width: 25%;">
-          <div class="graph-title">
-              <h6 id="kpiTitle">{{produit|upper}}</h6>
-          </div>
-          <div id="kpi" style="height: 100%">
-          </div>
-        </div>
+    <!-- --Ligne de la bar de titre-- -->
+    <div class="row">
+        <div class="page-titles style1 justify-content-between">
+            <!-- Titre du dashboard -->
+            <div class="col-sm-12 col-md-5">
+                <h2 class="heading">Cash Management</h2>
+            </div>
 
-        <div class="graph-cart" style="width: 45%;">
-          <div class="graph-title">
-              <h6 id="infoTitle">Détail {{produit|upper}}</h6>
-          </div>
-          <div class="grid-container" style="height: 100%;">
-              <div id="infoProd" style="height: 100%" class="ag-theme-material"> 
-              </div>
-          </div>
-        </div>   
-      </div>
-        
-      <div class="graph-container" style="height: 250px;">
-        <div class="graph-cart" style="width: 49%;">
-          <div class="graph-title">
-              <h6>Comparatif Abonnés Cibles</h6>
-          </div>
-          <div class="graphique" id="resumeChart" style="height: 100%">
-          </div>
-        </div>
-        
-        <!-- Evolution des abonnés par mois -->
-        <div class="graph-cart" style="width: 49%;">
-          <div class="graph-title">
-              <h6>Evolution des abonnés par mois</h6>
-          </div>
-          <div class="graphique" id="idEvoProd" style="height: 100%">
-          </div>
-        </div>
-        <!-- Fin Evolution des abonnés par mois -->
-      </div>
-        
-      <div class="graph-container" style="height: 480px;">
-          <div class="grid-container" style="height: 100%; width: 60%;">
-            <h5>Tableau de répartition</h5>
-            <p>des abonnés {{produit|upper}} par service</p>
-            <div id="resum" style="height: 80%" class="ag-theme-material"> 
+            <div class="col-sm-3 col-md-2 mx-1">
+                <select id="produit" name="produit" class="default-select form-control wide form-control-sm ">
+                  <option value="anet">ANET</option>
+                  <option value="tpe">TPE</option>
+                  <option value="ecnps">E-CNPS</option>
+                  <option value="efacture">E-Facture</option>
+                  <option value="acs">ACS</option>
+                  <option value="ramassage">Ramassage</option>
+                </select>
             </div>
-          </div>
-          
-          <!-- Comparatif du taux d'equipement des produits -->
-          <div class="graph-cart" style="width: 38%; margin-top: 15px">
-            <div class="graph-title">
-                <h6>Taux d'equipement par produits</h6>
-            </div>
-            <div class="graphique" id="croissance" style="height: 95%">
-            </div>
-          </div>
-          <!-- Fin Comparatif du taux d'equipement des produits -->
-      </div>
-        
-      <div class="graph-container" style="height: 480px;">
-          <div class="grid-container" style="width: 49%; height: 100%">
-            <h5>Tableau de répartition</h5>
-            <p>des abonnés {{produit|upper}} par Gestionnaire</p>
-            <div id="gest" style="height: 85%; width: 100%;" class="ag-theme-material">
-            </div>
-          </div>   
 
-          <!-- Tableau du resume des produits -->
-          <div class="grid-container" style="width: 49%; height: 100%;">
-            <div class="row">
-              <div class="col-md-8">
-                  <h5>Tableau de répartition</h5>
-                  <p>des abonnés par produit</p>
-              </div>
-              <div class="col-md-4">
-                <div class="choice-date">
-                    <input id="periode" type="date" id="start" name="trip-start"
-                        value=""
-                        min="2022-01-01" max="">
+            <!-- Liste déroulante et date picker -->
+            <div class="col-sm-7 col-md-3 d-flex justify-content-end">
+                <div class="d-flex justify-content-end align-items-center">
+                    <h6 class="m-0" style="font-size: 0.8rem;">Choisir la période:</h6>
+                    <div class="input-group-append d-lg-none mx-2">
+                        <span class="input-group-text p-2"><img src="{% static 'finlab/images/calendrier.png' %}" class="img-fluid" alt=""></span>
+                    </div>
+                    <form class="d-none d-lg-flex">
+                        <div class="input-group input-group-sm d-flex justify-content-around align-items-center">
+                            <input name="datepicker" type="text" class="form-control mx-1 rounded-left" id="start_date" placeholder="Début" data-provide="datepicker" autocomplete="off" autoclose="true">
+                            <input name="datepicker" type="text" class="form-control mx-1 rounded-right" id="end_date" placeholder="Fin" data-provide="datepicker" autocomplete="off" autoclose="true">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-sm" type="submit" id="full-date">Actualiser</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-              </div>
             </div>
-            <div id="data" style="height: 80%" class="ag-theme-material">
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <!-- Portefeuille -->
+        <div class="col-md-3 col-sm-6 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Portefeuille</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 200px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <!-- Fin Datbleau du resume des produits -->
-      </div>
-    
-      <div style="height: 550px;" class="grid-container" >
-        <div class="row">
-          <div class="col-md-9">
-            <h5>Information</h5>
-            <p>Clients à abonner</p>
-          </div>
-          <div class="col-md-3">
-            <div style="margin: 10px 0">
-                <button type="button" class="btn btn-csv" onclick="onBtnExport()">Télechagez</button>
-            </div>
-          </div>
         </div>
 
-        <div id="nonAb" style="height: 90%" class="ag-theme-material">
+        <!-- Produit -->
+        <div class="col-md-3 col-sm-6 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Produit</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 200px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Détail Produit -->
+        <div class="col-md-6 col-sm-12 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Détail Produit</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 200px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-  </div>
+
+    <div class="row">
+        <!-- Comparatif Abonnés / Cible -->
+        <div class="col-md-6 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Abonnés / Cibles</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 250px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolution des abonnés par mois -->
+        <div class="col-md-6 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Evolution des abonnés par mois</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 250px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Tableau de répartition des abonnés ANET par service -->
+        <div class="col-md-7 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Tableau de répartition des abonnés</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 480px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Taux d'equipement par produits -->
+        <div class="col-md-5 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Taux d'equipement par produits</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 480px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Tableau de répartition des abonnés ANET par Gestionnaire -->
+        <div class="col-md-6 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Tableau de répartition des abonnés ANET par Gestionnaire</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 480px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau de répartition des abonnés par produit -->
+        <div class="col-md-6 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Tableau de répartition des abonnés par produit</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 480px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Information Clients à abonner-->
+        <div class="col-sm-12 p-1 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="card crypto-chart ">
+                <!-- titre du tableau -->
+                <div class="card-header border-0 px-4 py-1 flex-wrap">
+                    <div class="col-sm-7 mb-2 mb-sm-0">
+                        <div class="chart-title mb-3">
+                            <h2 class="heading">Client ciblé non abonné</h2>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 d-flex justify-content-end">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <button class="btn btn-primary" onclick="onBtnExport()">
+                                <span
+                                class="btn-icon-start text-warning"><i class="fa fa-download color-warning"></i>
+                                </span>Télécharger
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tableau -->
+                <div class="card-body p-2 custome-tooltip">
+                    <div class="table-responsive w-100">
+                        <div id="grid-recap-univers" style="height: 550px" class="ag-theme-material ag-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
 {% endblock content %}
 
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}
 
-{% include "suivi_produits/includes/script.html" %}
-<script src="/static/js/utils-grid.js"></script>
-{% include "suivi_produits/includes/grid.html" %}
-{% include "suivi_produits/includes/grid-chart.html" %}
-<script src="/static/js/grid.js"></script>
+{% block additional_js %}
+    {% for jsurl in dz_array.pagelevel.finlab.finlab_views.js.table_datatable_basic %}
+	<script src="{% static jsurl %}"></script>
+    {% endfor %}
 
-{% endblock javascripts %}
+    <script src="{% static 'finlab/vendor/peity/jquery.peity.min.js' %}"></script>
+    <script src="{% static 'finlab/vendor/swiper/js/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'finlab/vendor/wow-master/dist/wow.min.js' %}"></script>
+    <script src="{% static 'finlab/vendor/bootstrap-datetimepicker/js/moment.js' %}"></script>
+    <script src="{% static 'finlab/vendor/datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+
+    <!-- -- Perso -- -->
+    <script src="{% static 'finlab/vendor/ag-grid-community/dist/ag-grid-community.min.js' %}"></script>
+    <script src="{% static 'finlab/vendor/echarts/dist/echarts.min.js' %}"></script>
+    <script src="{% static 'dataviz_cash_m/js/global_variable.js' %}"></script>
+    <script src="{% static 'dataviz_cash_m/js/dashbord-dms.js' %}"></script>
+
+    <script>
+
+    $(document).ready(function(){
+
+        // Initialise le datepicker de début
+        $('#start_date').datepicker({
+          format: "mm/yyyy",
+          startView: "months",
+          minViewMode: "months",
+          minDate: '{{ min_date }}',
+          maxDate: '{{ max_date }}',
+          language: 'fr',
+          autoclose: true,
+          todayHighlight: true,
+        }).on('changeDate', function(selected){
+          var minDate = new Date(selected.date.valueOf());
+          $('#end_date').datepicker('setStartDate', minDate);
+          //console.log('Date de début: ', $('#start_date').datepicker('getDate').toISOString().slice(0,10));
+        });
+
+        // Initialise le datepicker de fin
+        $('#end_date').datepicker({
+          format: "mm/yyyy",
+          startView: "months",
+          minViewMode: "months",
+          minDate: '{{ min_date }}',
+          maxDate: '{{ max_date }}',
+          language: 'fr',
+          autoclose: true,
+          todayHighlight: true,
+        }).on('changeDate', function(selected){
+          var maxDate = new Date(selected.date.valueOf());
+          $('#start_date').datepicker('setEndDate', maxDate);
+          //console.log('Date de fin: ', $('#end_date').datepicker('getDate').toISOString().slice(0,10));
+        });
+
+        // Fonction pour vérifier si les deux dates ont été sélectionnées avant l'envoi du formulaire
+        function checkDates() {
+          var startDate = $('#start_date').datepicker('getDate');
+          var endDate = $('#end_date').datepicker('getDate');
+          if (!startDate || !endDate) {
+            alert('Veuillez sélectionner les deux dates avant de soumettre le formulaire.');
+            return false;
+          }
+          return true;
+        }
+
+        // Lorsque le formulaire est soumis, vérifiez si les deux dates ont été sélectionnées
+        $('#full-date').on('click', function(event) {
+            event.preventDefault(); // Empêcher le comportement par défaut du bouton submit
+            checkDates();
+            var startDate = $('#start_date').datepicker('getDate').toISOString().slice(0,10);
+            var endDate = $('#end_date').datepicker('getDate').toISOString().slice(0,10);
+
+            let univers = document.getElementById('univers').value;
+            let product = document.getElementById('product').value;
+
+            //{#getData(univers, product, startDate, endDate);
+          getData({
+            body: {
+              univers: univers,
+              product: product,
+              startDate: startDate,
+              endDate: endDate,
+            },
+          });
+        });
+    });
+
+    </script>
+
+{% endblock %}

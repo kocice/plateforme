@@ -47,6 +47,7 @@ class Donnees():
         request = f"SELECT * FROM abonne_produit WHERE {self.getPeriode}"
         data = pd.read_sql(sql=text(request), con=connection)
         data = data.drop(columns=['id'])
+        data['periode'] = data['periode'].astype(str)
         data['directions'] = data['directions'].apply(lambda x: x if x is not None else DBD)
         data['services'] = data['services'].apply(lambda x: x if x is not None else DBD)
         self.data = data
@@ -95,6 +96,7 @@ class Donnees():
         # df['croissance'] = 0
         df['equipement'] = np.vectorize(equipement)(df['abonne_corpo'], df['cible'])
 
+        df['periode'] = df['periode'].astype(str)
         df = df.rename(columns={'periode': 'date'})
         df = df.rename(str.capitalize, axis='columns')
 

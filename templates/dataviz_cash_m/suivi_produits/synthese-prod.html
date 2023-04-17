@@ -1,16 +1,16 @@
-{% extends 'layouts/base.html' %}
+{% extends 'dataviz_cash_m/layouts/base.html' %}
+{% load static %}
 
 {% block title %} SYNTHESE {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}
-<link rel="stylesheet" sizes="76x76" href="/static/css/suivi_produit.css">
+<link rel="stylesheet" sizes="76x76" href="{% static 'dataviz_cash_m/css/suivi_produit.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}
 
     <div class="wrapper">
-        {% include "suivi_produits/includes/side-bar.html" %}
         <div class="main-home">
             <div class="row">
                 <div class="col-md-7">
@@ -68,8 +68,8 @@
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
 
-{% include "suivi_produits/includes/script.html" %}
-{% include "suivi_produits/includes/synthese-grid.html" %}
-<script src="/static/js/synthese-prod.js"></script>
+{% include "dataviz_cash_m/suivi_produits/includes/script.html" %}
+{% include "dataviz_cash_m/suivi_produits/includes/synthese-grid.html" %}
+<script src="{% static 'dataviz_cash_m/js/synthese-prod.js' %}"></script>
 
 {% endblock javascripts %}

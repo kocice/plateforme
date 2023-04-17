@@ -1,10 +1,12 @@
-{% extends 'layouts/base.html' %}
+{% extends 'dataviz_cash_m/layouts/base.html' %}
+
+{% load static %}
 
 {% block title %} Home {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}
-<link rel="stylesheet" sizes="76x76" href="/static/css/suivi_produit.css">
+<link rel="stylesheet" sizes="76x76" href="{% static 'dataviz_cash_m/css/suivi_produit.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}

@@ -1,5 +1,10 @@
 <!--   Core CSS Files   -->
 
-{% comment %} <script src="/static/bootstrap/css/bootstrap.min.css"></script> {% endcomment %}
+{% load static %}
 
-<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+{#<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">#}
+<link rel="stylesheet" href="{% static 'finlab/vendor/bootstrap/css/bootstrap.min.css' %}" >
+<link rel="stylesheet" href="{% static 'dataviz_cash_m/css/style.css' %}" >
+<link rel="stylesheet" href="{% static 'dataviz_cash_m/css/style_grid.css' %}" >
+<link rel="stylesheet" href="{% static 'dataviz_cash_m/css/suivi_produit.css' %}" >
+<link rel="stylesheet" href="{% static 'dataviz_cash_m/css/ag-grid-custom.css' %}" >
