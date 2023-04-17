@@ -1,7 +1,7 @@
 /*============== AG-Grid Config  ===============*/
 .ag-theme-material {
     --ag-header-height: 22px;
-    --ag-header-foreground-color: #E67900;
+    --ag-header-foreground-color: #E67900 !important;
     --ag-header-background-color: #F16E00 !important;
     --ag-header-color: #FFFFFF !important;
     --ag-header-cell-hover-background-color: #572F19 !important;

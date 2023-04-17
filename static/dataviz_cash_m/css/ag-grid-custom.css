@@ -1,7 +1,7 @@
 /*============== AG-Grid Config  ===============*/
 .ag-theme-material {
     --ag-header-height: 22px;
-    --ag-header-foreground-color: #E67900;
+    --ag-header-foreground-color: #E67900 !important;
     --ag-header-background-color: #F16E00 !important;
     --ag-header-color: #FFFFFF !important;
     --ag-header-cell-hover-background-color: #572F19 !important;
@@ -67,3 +67,46 @@
 }
 
 /*============== End Table CSS ===============*/
+
+
+
+
+.row-rouge {
+    color: #fff;
+    font-weight: 500;
+    background-color: #f04141;
+    font-size: 13px;
+}
+.row-orange {
+    color: #fff;
+    font-weight: 500;
+    background-color: #ff6823;
+    font-size: 13px;
+}
+.row-vert-ciel {
+    background-color: #a1f79e;
+    /*color: #a1f79e;*/
+    font-weight: 500;
+    font-size: 13px;
+}
+.row-vert {
+    color: #fff;
+    font-weight: 500;
+    background-color: #04c424;
+    font-size: 13px;
+}
+
+.row-ras {
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.row-prod {
+    color: #46484D !important;
+    font-size: 18px !important;
+}
+
+.row-table {
+    color: #46484D !important;
+    font-size: 15px !important;
+}
